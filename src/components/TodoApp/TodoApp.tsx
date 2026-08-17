@@ -7,6 +7,8 @@ import { useState } from 'react';
 
 type Props = {
   todos: Todo[] | null;
+  tempTodo: Todo | null;
+  // setTempTodo: (el: Todo | null) => void;
   isLoading: boolean;
   setIsLoading: (el: boolean) => void;
   isAdding: boolean;
@@ -21,6 +23,7 @@ export const TodoApp: React.FC<Props> = ({
   todos,
   isLoading,
   statusFilter,
+  tempTodo,
 }) => {
   const filteredTodos = todos?.filter(todo => {
     if (statusFilter === 'completed') {
@@ -73,6 +76,35 @@ export const TodoApp: React.FC<Props> = ({
             </div>
           );
         })}
+      {tempTodo !== null ? (
+        <div
+          data-cy="Todo"
+          className={`todo ${tempTodo.completed ? 'completed' : ''}`}
+          key={tempTodo.id}
+        >
+          <label className="todo__status-label">
+            <input
+              data-cy="TodoStatus"
+              type="checkbox"
+              className={`todo__status ${tempTodo.completed ? 'completed' : ''}`}
+              checked={tempTodo.completed}
+            />
+          </label>
+
+          <span data-cy="TodoTitle" className="todo__title">
+            {tempTodo.title}
+          </span>
+
+          {/* Remove button appears only on hover */}
+          <button type="button" className="todo__remove" data-cy="TodoDelete">
+            ×
+          </button>
+
+          <Loader isLoading={isLoading} />
+        </div>
+      ) : (
+        ''
+      )}
     </section>
   );
 };

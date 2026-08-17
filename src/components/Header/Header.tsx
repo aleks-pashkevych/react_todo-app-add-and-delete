@@ -5,6 +5,7 @@ import { Todo } from '../../types/Todo';
 type Props = {
   todos: Todo[] | null;
   setTodos: (todos: Todo[]) => void;
+  setTempTodo: (el: Todo | null) => void;
   isLoading: boolean;
   setIsLoading: (el: boolean) => void;
   isAdding: boolean;
@@ -14,11 +15,13 @@ type Props = {
   setIsError: (el: boolean) => void;
   setErrorMessage: (el: string) => void;
   USER_ID: number;
+  onCreate: () => void;
 };
 
 export const Header: React.FC<Props> = ({
   todos,
   setTodos,
+  setTempTodo,
   isLoading,
   setIsLoading,
   isAdding,
@@ -26,6 +29,7 @@ export const Header: React.FC<Props> = ({
   setIsError,
   setErrorMessage,
   USER_ID,
+  onCreate,
 }) => {
   const [title, setTitle] = useState('');
   const addTodo = async () => {
@@ -53,6 +57,8 @@ export const Header: React.FC<Props> = ({
 
         setTodos([...(todos || null), createdTodo]);
         setTitle('');
+        setTempTodo(null);
+        onCreate();
 
         return createdTodo;
       } catch {
@@ -75,6 +81,19 @@ export const Header: React.FC<Props> = ({
     return false;
   };
 
+  const createTempTodo = () => {
+    const tempTodo = {
+      id: 0,
+      userId: USER_ID,
+      title: title.trim(),
+      completed: false,
+    };
+
+    if (todos) {
+      setTempTodo(tempTodo);
+    }
+  };
+
   return (
     <header className="todoapp__header">
       {/* this button should have `active` class only if all todos are completed */}
@@ -88,6 +107,7 @@ export const Header: React.FC<Props> = ({
       <form
         onSubmit={event => {
           event.preventDefault();
+          createTempTodo();
           addTodo();
         }}
       >

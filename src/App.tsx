@@ -17,6 +17,7 @@ import { TodoApp } from './components/TodoApp/TodoApp';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[] | null>(null);
+  const [tempTodo, setTempTodo] = useState<Todo | null>(null);
 
   const [isError, setIsError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -30,8 +31,7 @@ export const App: React.FC = () => {
     return <UserWarning />;
   }
 
-  //eslint-disable-next-line react-hooks/rules-of-hooks
-  useEffect(() => {
+  const getTodos = () => {
     setIsLoading(true);
     setIsError(false);
     client
@@ -46,6 +46,11 @@ export const App: React.FC = () => {
         // setIsError(false);
         // setErrorMessage('');
       });
+  };
+
+  //eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    getTodos();
   }, []);
 
   //eslint-disable-next-line react-hooks/rules-of-hooks
@@ -57,6 +62,10 @@ export const App: React.FC = () => {
     }
   }, [isError]);
 
+  const handleCreate = () => {
+    getTodos();
+  };
+
   return (
     <div className="todoapp">
       <h1 className="todoapp__title">todos</h1>
@@ -65,16 +74,19 @@ export const App: React.FC = () => {
         <Header
           todos={todos}
           setTodos={setTodos}
+          setTempTodo={setTempTodo}
           USER_ID={USER_ID}
           setIsLoading={setIsLoading}
           setIsError={setIsError}
           setIsAdding={setIsAdding}
           setErrorMessage={setErrorMessage}
+          onCreate={handleCreate}
         />
 
         {todos && todos.length > 0 && (
           <TodoApp
             todos={todos}
+            tempTodo={tempTodo}
             isLoading={isLoading}
             setIsLoading={setIsLoading}
             isAdding={isAdding}
