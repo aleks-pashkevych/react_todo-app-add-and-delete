@@ -3,9 +3,14 @@ import React from 'react';
 type Props = {
   isError: boolean;
   setIsError: (err: boolean) => void;
+  errorMessage: string;
 };
 
-export const ErrorNotification: React.FC<Props> = ({ isError, setIsError }) => {
+export const ErrorNotification: React.FC<Props> = ({
+  isError,
+  setIsError,
+  errorMessage,
+}) => {
   const toHide = isError === false ? 'hidden' : '';
 
   return (
@@ -20,7 +25,7 @@ export const ErrorNotification: React.FC<Props> = ({ isError, setIsError }) => {
         onClick={() => setIsError(false)}
       />
       {/* show only one message at a time */}
-      Unable to load todos
+      {errorMessage}
       <br />
       {/* Title should not be empty
       <br />

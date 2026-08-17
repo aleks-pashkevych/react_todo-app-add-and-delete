@@ -19,6 +19,8 @@ export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[] | null>(null);
 
   const [isError, setIsError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
   const [isLoading, setIsLoading] = useState(false);
   const [statusFilter, setStatusFilter] = useState('all');
 
@@ -35,8 +37,15 @@ export const App: React.FC = () => {
     client
       .get(`/todos?userId=${USER_ID}`)
       .then(setTodos)
-      .catch(() => setIsError(true))
-      .finally(() => setIsLoading(false));
+      .catch(() => {
+        setErrorMessage('Unable to add a todo');
+        setIsError(true);
+      })
+      .finally(() => {
+        setIsLoading(false);
+        setIsError(false);
+        setErrorMessage('');
+      });
   }, []);
 
   //eslint-disable-next-line react-hooks/rules-of-hooks
@@ -60,6 +69,7 @@ export const App: React.FC = () => {
           setIsLoading={setIsLoading}
           setIsError={setIsError}
           setIsAdding={setIsAdding}
+          setErrorMessage={setErrorMessage}
         />
 
         {todos && todos.length > 0 && (
@@ -84,7 +94,11 @@ export const App: React.FC = () => {
           />
         )}
       </div>
-      <ErrorNotification isError={isError} setIsError={setIsError} />
+      <ErrorNotification
+        isError={isError}
+        setIsError={setIsError}
+        errorMessage={errorMessage}
+      />
     </div>
   );
 };

@@ -12,6 +12,7 @@ type Props = {
   statusFilter: string;
   isError: boolean;
   setIsError: (el: boolean) => void;
+  setErrorMessage: (el: string) => void;
   USER_ID: number;
 };
 
@@ -23,6 +24,7 @@ export const Header: React.FC<Props> = ({
   isAdding,
   setIsAdding,
   setIsError,
+  setErrorMessage,
   USER_ID,
 }) => {
   const [title, setTitle] = useState('');
@@ -31,6 +33,7 @@ export const Header: React.FC<Props> = ({
 
     if (!trimmedTitle) {
       setIsError(true);
+      setErrorMessage('Title should not be empty');
 
       return;
     } else {
@@ -47,12 +50,12 @@ export const Header: React.FC<Props> = ({
         const createdTodo = await client.post(`/todos?userId=${USER_ID}`, el);
 
         setTodos([...(todos || null), createdTodo]);
-        setTitle('');
       } catch {
         setIsError(true);
       } finally {
         setIsLoading(false);
         setIsAdding(false);
+        setTitle('');
         setTimeout(() => {
           const input = document.querySelector(
             '.todoapp__new-todo',
