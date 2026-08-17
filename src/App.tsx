@@ -64,6 +64,7 @@ export const App: React.FC = () => {
 
   const handleCreate = () => {
     getTodos();
+    setTempTodo(null);
   };
 
   return (

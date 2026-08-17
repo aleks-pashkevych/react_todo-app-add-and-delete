@@ -55,9 +55,9 @@ export const Header: React.FC<Props> = ({
       try {
         const createdTodo = await client.post(`/todos?userId=${USER_ID}`, el);
 
+        setTempTodo(null);
         setTodos([...(todos || null), createdTodo]);
         setTitle('');
-        setTempTodo(null);
         onCreate();
 
         return createdTodo;
@@ -77,8 +77,6 @@ export const Header: React.FC<Props> = ({
         }, 0);
       }
     }
-
-    return false;
   };
 
   const createTempTodo = () => {
