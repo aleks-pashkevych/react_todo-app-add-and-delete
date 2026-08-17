@@ -38,13 +38,13 @@ export const App: React.FC = () => {
       .get(`/todos?userId=${USER_ID}`)
       .then(setTodos)
       .catch(() => {
-        setErrorMessage('Unable to add a todo');
+        setErrorMessage('Unable to load todos');
         setIsError(true);
       })
       .finally(() => {
         setIsLoading(false);
-        setIsError(false);
-        setErrorMessage('');
+        // setIsError(false);
+        // setErrorMessage('');
       });
   }, []);
 

@@ -31,11 +31,13 @@ export const Header: React.FC<Props> = ({
   const addTodo = async () => {
     const trimmedTitle = title.trim();
 
+    setErrorMessage('');
+
     if (!trimmedTitle) {
       setIsError(true);
       setErrorMessage('Title should not be empty');
 
-      return;
+      return false;
     } else {
       setIsError(false);
       setIsLoading(true);
@@ -50,12 +52,16 @@ export const Header: React.FC<Props> = ({
         const createdTodo = await client.post(`/todos?userId=${USER_ID}`, el);
 
         setTodos([...(todos || null), createdTodo]);
+        setTitle('');
+
+        return createdTodo;
       } catch {
         setIsError(true);
+        setErrorMessage('Unable to add a todo');
+        throw new Error('Unable to add a todo');
       } finally {
         setIsLoading(false);
         setIsAdding(false);
-        setTitle('');
         setTimeout(() => {
           const input = document.querySelector(
             '.todoapp__new-todo',
@@ -65,6 +71,8 @@ export const Header: React.FC<Props> = ({
         }, 0);
       }
     }
+
+    return false;
   };
 
   return (
