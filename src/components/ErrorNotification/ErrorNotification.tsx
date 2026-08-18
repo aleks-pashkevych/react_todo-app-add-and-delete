@@ -4,12 +4,14 @@ type Props = {
   isError: boolean;
   setIsError: (err: boolean) => void;
   errorMessage: string;
+  setErrorMessage: (el: string) => void;
 };
 
 export const ErrorNotification: React.FC<Props> = ({
   isError,
   setIsError,
   errorMessage,
+  setErrorMessage,
 }) => {
   const toHide = isError === false ? 'hidden' : '';
 
@@ -22,7 +24,10 @@ export const ErrorNotification: React.FC<Props> = ({
         data-cy="HideErrorButton"
         type="button"
         className="delete"
-        onClick={() => setIsError(false)}
+        onClick={() => {
+          setIsError(false);
+          setErrorMessage('');
+        }}
       />
       {/* show only one message at a time */}
       {errorMessage}

@@ -13,14 +13,20 @@ import { ErrorNotification } from './components/ErrorNotification';
 import { Header } from './components/Header';
 import { TodoApp } from './components/TodoApp/TodoApp';
 
-// const USER_ID = 0;
-
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[] | null>(null);
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
 
+  const ErrorMessages = {
+    None: '',
+    Load: 'Unable to load todos',
+    Empty: 'Title should not be empty',
+    Add: 'Unable to add a todo',
+    Delete: 'Unable to delete a todo',
+  };
+
   const [isError, setIsError] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState(ErrorMessages.None);
 
   const [isLoading, setIsLoading] = useState(false);
   const [statusFilter, setStatusFilter] = useState('all');
@@ -38,13 +44,11 @@ export const App: React.FC = () => {
       .get(`/todos?userId=${USER_ID}`)
       .then(setTodos)
       .catch(() => {
-        setErrorMessage('Unable to load todos');
+        setErrorMessage(ErrorMessages.Load);
         setIsError(true);
       })
       .finally(() => {
         setIsLoading(false);
-        // setIsError(false);
-        // setErrorMessage('');
       });
   };
 
@@ -76,12 +80,15 @@ export const App: React.FC = () => {
           todos={todos}
           setTodos={setTodos}
           setTempTodo={setTempTodo}
-          USER_ID={USER_ID}
+          isLoading={isLoading}
           setIsLoading={setIsLoading}
-          setIsError={setIsError}
+          isAdding={isAdding}
           setIsAdding={setIsAdding}
+          setIsError={setIsError}
           setErrorMessage={setErrorMessage}
+          USER_ID={USER_ID}
           onCreate={handleCreate}
+          ErrorMessages={ErrorMessages}
         />
 
         {todos && todos.length > 0 && (
@@ -111,6 +118,7 @@ export const App: React.FC = () => {
         isError={isError}
         setIsError={setIsError}
         errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
       />
     </div>
   );

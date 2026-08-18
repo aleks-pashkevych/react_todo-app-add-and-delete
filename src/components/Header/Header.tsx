@@ -16,6 +16,13 @@ type Props = {
   setErrorMessage: (el: string) => void;
   USER_ID: number;
   onCreate: () => void;
+  ErrorMessages: {
+    None: string;
+    Load: string;
+    Empty: string;
+    Add: string;
+    Delete: string;
+  };
 };
 
 export const Header: React.FC<Props> = ({
@@ -30,6 +37,7 @@ export const Header: React.FC<Props> = ({
   setErrorMessage,
   USER_ID,
   onCreate,
+  ErrorMessages,
 }) => {
   const [title, setTitle] = useState('');
   const addTodo = async () => {
@@ -39,7 +47,7 @@ export const Header: React.FC<Props> = ({
 
     if (!trimmedTitle) {
       setIsError(true);
-      setErrorMessage('Title should not be empty');
+      setErrorMessage(ErrorMessages.Empty);
 
       return false;
     } else {
@@ -66,8 +74,8 @@ export const Header: React.FC<Props> = ({
         // return createdTodo;
       } catch {
         setIsError(true);
-        setErrorMessage('Unable to add a todo');
-        throw new Error('Unable to add a todo');
+        setErrorMessage(ErrorMessages.Add);
+        throw new Error(ErrorMessages.Add);
       } finally {
         setIsLoading(false);
         setIsAdding(false);

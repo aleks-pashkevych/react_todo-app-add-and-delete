@@ -7,8 +7,14 @@ const URL = `/todos?userId=${USER_ID}`;
 
 export const getTodos = () => {
   return client.get<Todo[]>(URL);
+};
 
-  return client.post(`URL`, {});
+export const postTodo = () => {
+  return client.post(URL, {});
+};
+
+export const deleteTodo = () => {
+  return client.delete(URL);
 };
 
 // Add more methods here

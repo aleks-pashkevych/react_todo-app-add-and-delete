@@ -87,7 +87,6 @@ export const TodoApp: React.FC<Props> = ({
               data-cy="TodoStatus"
               type="checkbox"
               className={`todo__status ${tempTodo.completed ? 'completed' : ''}`}
-              checked={tempTodo.completed}
             />
           </label>
 
@@ -96,7 +95,12 @@ export const TodoApp: React.FC<Props> = ({
           </span>
 
           {/* Remove button appears only on hover */}
-          <button type="button" className="todo__remove" data-cy="TodoDelete">
+          <button
+            type="button"
+            className="todo__remove"
+            data-cy="TodoDelete"
+            disabled
+          >
             ×
           </button>
 
