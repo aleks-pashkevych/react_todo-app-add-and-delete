@@ -53,14 +53,17 @@ export const Header: React.FC<Props> = ({
       };
 
       try {
-        const createdTodo = await client.post(`/todos?userId=${USER_ID}`, el);
+        const createdTodo: Todo = await client.post(
+          `/todos?userId=${USER_ID}`,
+          el,
+        );
 
         setTempTodo(null);
-        setTodos([...(todos || null), createdTodo]);
+        setTodos([...(todos || []), createdTodo]);
         setTitle('');
         onCreate();
 
-        return createdTodo;
+        // return createdTodo;
       } catch {
         setIsError(true);
         setErrorMessage('Unable to add a todo');
@@ -103,10 +106,10 @@ export const Header: React.FC<Props> = ({
 
       {/* Add a todo on form submit */}
       <form
-        onSubmit={event => {
+        onSubmit={async event => {
           event.preventDefault();
           createTempTodo();
-          addTodo();
+          await addTodo();
         }}
       >
         <input
