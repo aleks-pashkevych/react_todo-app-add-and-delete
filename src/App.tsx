@@ -57,6 +57,11 @@ export const App: React.FC = () => {
     getTodos();
   }, []);
 
+  const onCreate = () => {
+    getTodos();
+    setTempTodo(null);
+  };
+
   //eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (isError) {
@@ -65,12 +70,6 @@ export const App: React.FC = () => {
       return () => clearTimeout(timer);
     }
   }, [isError]);
-
-  const handleCreate = () => {
-    console.log('handleCreate called!');
-    getTodos();
-    setTempTodo(null);
-  };
 
   return (
     <div className="todoapp">
@@ -88,13 +87,15 @@ export const App: React.FC = () => {
           setIsError={setIsError}
           setErrorMessage={setErrorMessage}
           USER_ID={USER_ID}
-          onCreate={handleCreate}
+          onCreate={onCreate}
           ErrorMessages={ErrorMessages}
         />
 
         {todos && todos.length > 0 && (
           <TodoApp
             todos={todos}
+            getTodos={getTodos}
+            setTodos={setTodos}
             tempTodo={tempTodo}
             isLoading={isLoading}
             setIsLoading={setIsLoading}
@@ -104,6 +105,7 @@ export const App: React.FC = () => {
             isError={isError}
             setIsError={setIsError}
             USER_ID={USER_ID}
+            ErrorMessages={ErrorMessages}
           />
         )}
         {/* Hide the footer if there are no todos */}

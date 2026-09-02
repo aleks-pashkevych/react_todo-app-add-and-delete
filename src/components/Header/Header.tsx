@@ -73,19 +73,15 @@ export const Header: React.FC<Props> = ({
       };
 
       try {
-        console.log('About to make API call');
         const createdTodo: Todo = await client.post(
           `/todos?userId=${USER_ID}`,
           el,
         );
-        console.log('API call succeeded');
 
         setTempTodo(null);
         setTodos([...(todos || []), createdTodo]);
         setTitle('');
         onCreate();
-        console.log('onCreate called');
-
         // return createdTodo;
       } catch {
         setIsError(true);
@@ -132,8 +128,6 @@ export const Header: React.FC<Props> = ({
         <input
           data-cy="NewTodoField"
           type="text"
-          // autoFocus={isFocused}
-          // autoFocus-{}
           className="todoapp__new-todo"
           placeholder="What needs to be done?"
           value={title}

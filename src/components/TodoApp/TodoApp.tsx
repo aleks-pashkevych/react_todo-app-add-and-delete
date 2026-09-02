@@ -1,12 +1,16 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 
+import { getTodos } from '../../api/todos';
 import { Todo } from '../../types/Todo';
+import { client } from '../../utils/fetchClient';
 import { Loader } from '../Loader';
 import { useState } from 'react';
 
 type Props = {
   todos: Todo[] | null;
+  getTodos: () => void;
+  setTodos: (todos: Todo[]) => void;
   tempTodo: Todo | null;
   // setTempTodo: (el: Todo | null) => void;
   isLoading: boolean;
@@ -17,13 +21,18 @@ type Props = {
   isError: boolean;
   setIsError: (el: boolean) => void;
   USER_ID: number;
+  ErrorMessages: { None: string; Delete: string };
+  setErrorMessage: (msg: string) => void;
 };
 
 export const TodoApp: React.FC<Props> = ({
   todos,
+  setTodos,
   isLoading,
   statusFilter,
   tempTodo,
+  ErrorMessages,
+  setErrorMessage,
 }) => {
   const filteredTodos = todos?.filter(todo => {
     if (statusFilter === 'completed') {
@@ -37,6 +46,23 @@ export const TodoApp: React.FC<Props> = ({
     return true;
   });
   const [title, setTitle] = useState('');
+
+  const removeTodo = async (id: string) => {
+    try {
+      const deleted = await client.delete(`/todos/${id}`);
+
+      if (deleted === 1) {
+        if (todos) {
+          setTodos(todos.filter(todo => todo.id !== deleted));
+          getTodos();
+        }
+      }
+    } catch (error) {
+      setErrorMessage(ErrorMessages.Delete);
+    } finally {
+      // console.log(todos);
+    }
+  };
 
   return (
     <section className="todoapp__main" data-cy="TodoList">
@@ -68,6 +94,9 @@ export const TodoApp: React.FC<Props> = ({
                 type="button"
                 className="todo__remove"
                 data-cy="TodoDelete"
+                onClick={() => {
+                  removeTodo(el.id);
+                }}
               >
                 ×
               </button>

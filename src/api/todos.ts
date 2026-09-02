@@ -13,8 +13,8 @@ export const postTodo = () => {
   return client.post(URL, {});
 };
 
-export const deleteTodo = () => {
-  return client.delete(URL);
+export const deleteTodo = (id: number) => {
+  return client.delete(`/todos/${id}`);
 };
 
 // Add more methods here
