@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { client } from '../../utils/fetchClient';
 import { Todo } from '../../types/Todo';
 
@@ -40,7 +40,18 @@ export const Header: React.FC<Props> = ({
   ErrorMessages,
 }) => {
   const [title, setTitle] = useState('');
-  const [isFocused, setIsFocused] = useState(false);
+  // const [isFocused, setIsFocused] = useState(false);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!isAdding && !isLoading) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 0);
+    }
+  }, [isAdding, isLoading]);
+
   const addTodo = async () => {
     const trimmedTitle = title.trim();
 
@@ -78,7 +89,7 @@ export const Header: React.FC<Props> = ({
         setErrorMessage(ErrorMessages.Add);
         throw new Error(ErrorMessages.Add);
       } finally {
-        setIsFocused(true);
+        // setIsFocused(true);
         setIsLoading(false);
         setIsAdding(false);
       }
@@ -118,12 +129,14 @@ export const Header: React.FC<Props> = ({
         <input
           data-cy="NewTodoField"
           type="text"
-          autoFocus={isFocused}
+          // autoFocus={isFocused}
+          // autoFocus-{}
           className="todoapp__new-todo"
           placeholder="What needs to be done?"
           value={title}
           onChange={event => setTitle(event.target.value)}
           disabled={isLoading || isAdding}
+          ref={inputRef}
         />
       </form>
     </header>
