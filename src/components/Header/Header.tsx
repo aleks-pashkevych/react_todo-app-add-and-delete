@@ -82,6 +82,7 @@ export const Header: React.FC<Props> = ({
         setTodos([...(todos || []), createdTodo]);
         setTitle('');
         onCreate();
+        console.log('onCreate called');
 
         // return createdTodo;
       } catch {

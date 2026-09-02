@@ -67,6 +67,7 @@ export const App: React.FC = () => {
   }, [isError]);
 
   const handleCreate = () => {
+    console.log('handleCreate called!');
     getTodos();
     setTempTodo(null);
   };
