@@ -73,10 +73,12 @@ export const Header: React.FC<Props> = ({
       };
 
       try {
+        console.log('About to make API call');
         const createdTodo: Todo = await client.post(
           `/todos?userId=${USER_ID}`,
           el,
         );
+        console.log('API call succeeded');
 
         setTempTodo(null);
         setTodos([...(todos || []), createdTodo]);
