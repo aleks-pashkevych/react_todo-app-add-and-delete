@@ -40,6 +40,7 @@ export const Header: React.FC<Props> = ({
   ErrorMessages,
 }) => {
   const [title, setTitle] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
   const addTodo = async () => {
     const trimmedTitle = title.trim();
 
@@ -77,15 +78,9 @@ export const Header: React.FC<Props> = ({
         setErrorMessage(ErrorMessages.Add);
         throw new Error(ErrorMessages.Add);
       } finally {
+        setIsFocused(true);
         setIsLoading(false);
         setIsAdding(false);
-        setTimeout(() => {
-          const input = document.querySelector(
-            '.todoapp__new-todo',
-          ) as HTMLInputElement;
-
-          input?.focus();
-        }, 0);
       }
     }
   };
@@ -123,12 +118,12 @@ export const Header: React.FC<Props> = ({
         <input
           data-cy="NewTodoField"
           type="text"
+          autoFocus={isFocused}
           className="todoapp__new-todo"
           placeholder="What needs to be done?"
           value={title}
           onChange={event => setTitle(event.target.value)}
           disabled={isLoading || isAdding}
-          autoFocus={!isLoading}
         />
       </form>
     </header>
