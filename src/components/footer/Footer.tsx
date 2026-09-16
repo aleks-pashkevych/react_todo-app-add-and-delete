@@ -31,6 +31,7 @@ export const Footer: React.FC<Props> = ({
 
   const handleClearCompleted = async () => {
     const completedTodos = todos?.filter(todo => todo.completed) || [];
+
     const deletePromises = completedTodos.map(todo =>
       client.delete(`/todos/${todo.id}?userId=${USER_ID}`),
     );
