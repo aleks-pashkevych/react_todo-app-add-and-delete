@@ -32,11 +32,14 @@ export const Footer: React.FC<Props> = ({
   const handleClearCompleted = async () => {
     const completedTodos = todos?.filter(todo => todo.completed) || [];
 
-    const deletePromises = completedTodos.map(todo =>
-      client.delete(`/todos/${todo.id}?userId=${USER_ID}`),
-    );
+    // const deletePromises = completedTodos.map(todo =>
+    //   client.delete(`/todos/${todo.id}?userId=${USER_ID}`),
+    // );
+    completedTodos.forEach(todo => {
+      client.delete(`/todos/${todo.id}?userId=${USER_ID}`);
+    });
 
-    await Promise.all(deletePromises);
+    // await Promise.all(deletePromises);
 
     setTodos(currentTodos => currentTodos.filter(todo => !todo.completed));
   };

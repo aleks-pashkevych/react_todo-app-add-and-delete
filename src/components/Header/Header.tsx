@@ -4,7 +4,7 @@ import { Todo } from '../../types/Todo';
 
 type Props = {
   todos: Todo[] | null;
-  setTodos: (todos: Todo[]) => void;
+  setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
   setTempTodo: (el: Todo | null) => void;
   isLoading: boolean;
   setIsLoading: (el: boolean) => void;
@@ -36,7 +36,6 @@ export const Header: React.FC<Props> = ({
   setIsError,
   setErrorMessage,
   USER_ID,
-  createCallback,
   ErrorMessages,
 }) => {
   const [title, setTitle] = useState('');
@@ -73,10 +72,11 @@ export const Header: React.FC<Props> = ({
       try {
         const createdTodo: Todo = await client.post(`/todos`, el);
 
-        setTempTodo(createdTodo);
-        setTodos([...(todos || []), createdTodo]);
+        // setTempTodo(createdTodo);
+        setTodos(prevTodos => [...prevTodos, createdTodo]);
+        setTempTodo(null);
         setTitle('');
-        createCallback();
+        // createCallback();
         // return createdTodo;
       } catch {
         setIsError(true);
