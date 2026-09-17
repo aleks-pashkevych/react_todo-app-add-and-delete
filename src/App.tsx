@@ -118,7 +118,6 @@ export const App: React.FC = () => {
             setStatusFilter={setStatusFilter}
             setIsError={setIsError}
             setErrorMessage={setErrorMessage}
-            USER_ID={USER_ID}
           />
         )}
         {/* <Loader isLoading={isLoading} /> */}

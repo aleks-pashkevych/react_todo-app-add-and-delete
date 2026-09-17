@@ -11,7 +11,6 @@ type Props = {
   setIsError: (el: boolean) => void;
   ErrorMessages: { None: string; Delete: string };
   setErrorMessage: (msg: string) => void;
-  USER_ID: number;
 };
 
 export const Footer: React.FC<Props> = ({
@@ -19,7 +18,6 @@ export const Footer: React.FC<Props> = ({
   setTodos,
   statusFilter,
   setStatusFilter,
-  USER_ID,
 }) => {
   const setStatus = (
     val: string,
@@ -33,7 +31,7 @@ export const Footer: React.FC<Props> = ({
     const completedTodos = todos?.filter(todo => todo.completed) || [];
 
     const deletePromises = completedTodos.map(todo =>
-      client.delete(`/todos/${todo.id}?userId=${USER_ID}`),
+      client.delete(`/todos/${todo.id}`),
     );
 
     await Promise.all(deletePromises);

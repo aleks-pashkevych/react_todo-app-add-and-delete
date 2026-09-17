@@ -49,6 +49,10 @@ export const Header: React.FC<Props> = ({
     }
   }, [isAdding, isLoading]);
 
+  // useEffect(() => {
+  //   inputRef.current?.focus();
+  // }, []);
+
   const addTodo = async () => {
     const trimmedTitle = title.trim();
 
