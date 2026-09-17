@@ -32,22 +32,30 @@ export const Footer: React.FC<Props> = ({
   };
 
   const handleClearCompleted = async () => {
-    const completedTodos = todos?.filter(todo => todo.completed) || [];
-
     setIsLoading(true);
+    setIsError(false);
+    try {
+      const completedTodos = todos?.filter(todo => todo.completed) || [];
 
-    const deletePromises = completedTodos.map(todo => {
-      try {
-        client.delete(`/todos/${todo.id}`);
-      } catch {
-        setErrorMessage(ErrorMessages.Delete);
-        setIsError(true);
-      }
-    });
+      await Promise.all(
+        completedTodos.map(todo => {
+          try {
+            client.delete(`/todos/${todo.id}`);
+          } catch {
+            setIsError(true);
+            setErrorMessage(ErrorMessages.Delete);
+          }
+        }),
+      );
+      setTodos(currentTodos => currentTodos.filter(todo => !todo.completed));
+    } catch {
+      setIsError(true);
+      setErrorMessage(ErrorMessages.Delete);
+    } finally {
+      setIsLoading(false);
+    }
 
-    await Promise.all(deletePromises);
-    setTodos(currentTodos => currentTodos.filter(todo => !todo.completed));
-    setIsLoading(false);
+    // await Promise.all(deletePromises);
   };
 
   return (
