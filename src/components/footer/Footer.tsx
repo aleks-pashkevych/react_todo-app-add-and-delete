@@ -18,6 +18,10 @@ export const Footer: React.FC<Props> = ({
   setTodos,
   statusFilter,
   setStatusFilter,
+  setIsLoading,
+  setIsError,
+  setErrorMessage,
+  ErrorMessages,
 }) => {
   const setStatus = (
     val: string,
@@ -30,12 +34,20 @@ export const Footer: React.FC<Props> = ({
   const handleClearCompleted = async () => {
     const completedTodos = todos?.filter(todo => todo.completed) || [];
 
-    const deletePromises = completedTodos.map(todo =>
-      client.delete(`/todos/${todo.id}`),
-    );
+    setIsLoading(true);
+
+    const deletePromises = completedTodos.map(todo => {
+      try {
+        client.delete(`/todos/${todo.id}`);
+      } catch {
+        setErrorMessage(ErrorMessages.Delete);
+        setIsError(true);
+      }
+    });
 
     await Promise.all(deletePromises);
     setTodos(currentTodos => currentTodos.filter(todo => !todo.completed));
+    setIsLoading(false);
   };
 
   return (

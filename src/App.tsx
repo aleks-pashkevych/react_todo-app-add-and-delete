@@ -118,6 +118,7 @@ export const App: React.FC = () => {
             setStatusFilter={setStatusFilter}
             setIsError={setIsError}
             setErrorMessage={setErrorMessage}
+            ErrorMessages={ErrorMessages}
           />
         )}
         {/* <Loader isLoading={isLoading} /> */}
