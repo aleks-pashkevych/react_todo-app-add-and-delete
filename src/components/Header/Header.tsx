@@ -47,7 +47,7 @@ export const Header: React.FC<Props> = ({
     if (!isAdding && !isLoading) {
       inputRef.current?.focus();
     }
-  }, [isAdding, isLoading]);
+  }, [isAdding, isLoading, todos]);
 
   // useEffect(() => {
   //   inputRef.current?.focus();
@@ -61,37 +61,42 @@ export const Header: React.FC<Props> = ({
     if (!trimmedTitle) {
       setIsError(true);
       setErrorMessage(ErrorMessages.Empty);
+      inputRef.current?.focus();
 
-      return false;
-    } else {
-      setIsError(false);
-      setIsLoading(true);
-      setIsAdding(true);
-      const el = {
-        userId: USER_ID,
-        title: trimmedTitle,
-        completed: false,
-      };
+      return;
+    }
 
-      try {
-        const createdTodo: Todo = await client.post(`/todos`, el);
+    setIsError(false);
+    setIsLoading(true);
+    setIsAdding(true);
 
-        // setTempTodo(createdTodo);
-        setTodos(prevTodos => [...prevTodos, createdTodo]);
-        setTempTodo(null);
-        setTitle('');
-        // createCallback();
-        // return createdTodo;
-      } catch {
-        setIsError(true);
-        setTempTodo(null);
-        setErrorMessage(ErrorMessages.Add);
-        throw new Error(ErrorMessages.Add);
-      } finally {
-        // setIsFocused(true);
-        setIsLoading(false);
-        setIsAdding(false);
-      }
+    const el = {
+      userId: USER_ID,
+      title: trimmedTitle,
+      completed: false,
+    };
+
+    try {
+      const createdTodo: Todo = await client.post(`/todos`, el);
+
+      // setTempTodo(createdTodo);
+      setTodos(prevTodos =>
+        prevTodos ? [...prevTodos, createdTodo] : [createdTodo],
+      );
+      setTempTodo(null);
+      setTitle('');
+      // createCallback();
+      // return createdTodo;
+    } catch {
+      setIsError(true);
+      setTempTodo(null);
+      setErrorMessage(ErrorMessages.Add);
+      // throw new Error(ErrorMessages.Add);
+    } finally {
+      // setIsFocused(true);
+      setIsLoading(false);
+      setIsAdding(false);
+      setTimeout(() => inputRef.current?.focus(), 0);
     }
   };
 

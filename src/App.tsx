@@ -69,7 +69,7 @@ export const App: React.FC = () => {
 
       return () => clearTimeout(timer);
     }
-  }, [isError]);
+  }, [isError, errorMessage]);
 
   return (
     <div className="todoapp">

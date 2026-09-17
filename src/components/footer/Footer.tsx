@@ -5,7 +5,6 @@ import { client } from '../../utils/fetchClient';
 type Props = {
   todos: Todo[] | null;
   setTodos: (todos: Todo[]) => void;
-  setIsLoading: (el: boolean) => void;
   statusFilter: string;
   setStatusFilter: (filter: string) => void;
   setIsError: (el: boolean) => void;
@@ -18,7 +17,6 @@ export const Footer: React.FC<Props> = ({
   setTodos,
   statusFilter,
   setStatusFilter,
-  setIsLoading,
   setIsError,
   setErrorMessage,
   ErrorMessages,
@@ -32,30 +30,31 @@ export const Footer: React.FC<Props> = ({
   };
 
   const handleClearCompleted = async () => {
-    setIsLoading(true);
-    setIsError(false);
-    try {
-      const completedTodos = todos?.filter(todo => todo.completed) || [];
+    const completedTodos = todos?.filter(todo => todo.completed) || [];
+    const failedIds: number[] = [];
 
-      await Promise.all(
-        completedTodos.map(todo => {
-          try {
-            client.delete(`/todos/${todo.id}`);
-          } catch {
-            setIsError(true);
-            setErrorMessage(ErrorMessages.Delete);
-          }
+    setIsError(false);
+
+    await Promise.all(
+      completedTodos.map(todo =>
+        client.delete(`/todos/${todo.id}`).catch(() => {
+          failedIds.push(todo.id);
         }),
-      );
-      setTodos(currentTodos => currentTodos.filter(todo => !todo.completed));
-    } catch {
+      ),
+    );
+
+    // Тепер перевірка виконується ТІЛЬКИ після завершення всіх запитів
+    if (failedIds.length > 0) {
       setIsError(true);
       setErrorMessage(ErrorMessages.Delete);
-    } finally {
-      setIsLoading(false);
     }
 
-    // await Promise.all(deletePromises);
+    // Оновлюємо стан, залишаючи активні тудушки та ті, що не вдалося видалити
+    setTodos(currentTodos =>
+      (currentTodos || []).filter(
+        todo => !todo.completed || failedIds.includes(todo.id),
+      ),
+    );
   };
 
   return (
